@@ -23,15 +23,10 @@
 </head>
 <body>
 
-  <!-- Header Navigation -->
-  <header class="nav-bar" id="header-nav">
+  <!-- Header Navigation (Starts Transparent overlaying Splash Hero) -->
+  <header class="nav-bar nav-transparent" id="header-nav">
     <div class="logo-container">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-        </svg>
-      </div>
-      <span class="logo-text">Grand Residence</span>
+      <img src="https://drive.google.com/thumbnail?id=1pglPiV6Vykwstv6jw4TOJ02rn4nlQVIo&sz=w300" class="logo-image" alt="Grand Residence Logo">
     </div>
     <nav>
       <ul class="nav-links">
@@ -43,27 +38,61 @@
     </nav>
   </header>
 
+  <!-- Fullscreen Splash Hero Slideshow (Juventus Style) -->
+  <section id="splash-hero">
+    <!-- Slideshow background layers -->
+    <div class="splash-slideshow" id="splash-slideshow">
+      <!-- Populated by JavaScript with random showcase images -->
+    </div>
+    
+    <div class="splash-overlay"></div>
+    
+    <div class="splash-content">
+      <span class="splash-badge">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        PRO VERIFIED LISTING
+      </span>
+      <h2 class="splash-title">Hunian Nyaman & Area Usaha Strategis</h2>
+      <p class="splash-desc">Rumah kontrakan siap huni di Grand Residence Indah, Susukan, Bojonggede, Bogor. Tempat tinggal ideal yang menunjang mobilitas dan bisnis Anda.</p>
+      <div class="splash-ctas">
+        <a href="#calculator" class="splash-btn splash-btn-primary" id="btn-splash-calc">Simulasi Sewa</a>
+        <a class="splash-btn splash-btn-secondary wa-contact-btn" id="btn-splash-wa" target="_blank">Hubungi Pemilik</a>
+      </div>
+    </div>
+    
+    <!-- Bouncing Scroll Down Indicator -->
+    <div class="scroll-indicator" id="scroll-indicator">
+      <span>Scroll Kebawah</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="7 13 12 18 17 13"></polyline>
+        <polyline points="7 6 12 11 17 6"></polyline>
+      </svg>
+    </div>
+  </section>
+
   <!-- Main Canvas Content -->
   <main class="canvas-container" id="main-content">
     
     <!-- Left Main Canvas Workspace -->
     <div class="canvas-main">
       
-      <!-- Hero Highlight Widget -->
+      <!-- Hero Highlight Widget (Inline visual summary) -->
       <section class="hero-widget" id="hero-showcase">
         <div class="hero-bg-wrapper">
-          <img class="hero-bg" src="" alt="Cover Kontrakan Rumah" id="hero-cover-img">
+          <img class="hero-bg" src="" alt="Detail Kontrakan Rumah" id="hero-cover-img">
         </div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
           <span class="hero-tag">
-            <svg viewBox="0 0 24 24" style="width: 12px; height: 12px; fill: currentColor; margin-right: 4px;">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            <svg viewBox="0 0 24 24">
+              <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
             </svg>
-            PRO VERIFIED LISTING
+            SIAP HUNI & RAPI
           </span>
-          <h1 class="hero-title">Grand Residence Indah Bojonggede</h1>
-          <p class="hero-description">Disewakan rumah kontrakan bersih, nyaman, dan strategis. Sangat cocok untuk hunian keluarga, karyawan, maupun tempat tinggal yang terintegrasi dengan area usaha Anda.</p>
+          <h1 class="hero-title">Grand Residence Indah</h1>
+          <p class="hero-description">Disewakan rumah kontrakan bersih, nyaman, dan bebas banjir di Bojonggede. Sangat cocok untuk tempat tinggal sekaligus membuka usaha warung/toko.</p>
           <div class="hero-pills">
             <div class="hero-pill">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
@@ -71,15 +100,15 @@
             </div>
             <div class="hero-pill">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M2 4v16M2 8h20M2 12h20M2 16h20M22 4v16M18 8v4M6 8v4"></path></svg>
-              <span>2 Kamar Tidur</span>
+              <span>2 KT</span>
             </div>
             <div class="hero-pill">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-11-7-11S5 10.7 5 15a7 7 0 0 0 7 7z"></path></svg>
-              <span>2 Kamar Mandi</span>
+              <span>2 KM</span>
             </div>
             <div class="hero-pill">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-              <span>Sertifikat SHM</span>
+              <span>SHM</span>
             </div>
           </div>
         </div>
@@ -113,7 +142,7 @@
         </div>
 
         <!-- Carousel -->
-        <div class="carousel-wrapper">
+        <div class="carousel-wrapper" id="gallery-carousel-wrapper">
           <div class="carousel-track-container">
             <ul class="carousel-track" id="carousel-track">
               <!-- Populated by JavaScript -->
@@ -251,7 +280,7 @@
       <!-- Owner Info Profile Widget -->
       <div class="owner-widget premium-panel" id="owner-card">
         <div class="owner-profile">
-          <div class="owner-avatar">FN</div>
+          <div class="owner-avatar" id="owner-avatar-container">FN</div>
           <div class="owner-details">
             <span class="owner-name">Febri Nahdatun</span>
             <span class="owner-title">Pemilik Kontrakan</span>

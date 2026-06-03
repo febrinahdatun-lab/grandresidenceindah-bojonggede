@@ -1,7 +1,7 @@
 /**
-   * Premium Rental Landing Page - Interactive Controller
-   * Styled like Gemini Canvas
-   */
+ * Premium Rental Landing Page - Interactive Controller
+ * Styled like Gemini Canvas & Juventus Landing Experience
+ */
 
 document.addEventListener("DOMContentLoaded", () => {
   // SVG Icon Registry for UI cards
@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let filteredPhotos = [];
   let currentSlideIndex = 0;
   let activeFilter = "all";
+  let carouselAutoplayInterval = null;
 
   // Google Drive Image URL Resolver (high speed thumbnail renderer)
   function getDriveImageUrl(id, width = 1200) {
@@ -57,6 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
     filteredPhotos = [...activePhotos];
 
     // Initialize Components
+    setupSplashHero();
+    setupNavbarScroll();
     renderHeroSection();
     renderSpecifications();
     renderFacilities();
@@ -66,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupRentCalculator();
     setupLightbox();
     setupStaticData();
+    setupScrollIndicator();
   }
 
   // Set up owner info, maps, links in static sections
@@ -78,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div>
           <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Grand Residence Indah</p>
           <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 8px;">${CONFIG.details.lokasi.alamat}</p>
-          <span style="display: inline-block; font-size: 0.85rem; padding: 4px 10px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 100px; color: #a5b4fc;">
+          <span style="display: inline-block; font-size: 0.85rem; padding: 4px 10px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 100px; color: var(--text-secondary); font-family: var(--font-mono);">
             ${CONFIG.details.lokasi.jarakStasiun}
           </span>
         </div>
@@ -96,20 +100,107 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.href = CONFIG.owner.telegram;
     });
 
-    // Owner info in card
-    const ownerAvatar = document.querySelector(".owner-avatar");
-    if (ownerAvatar) ownerAvatar.textContent = CONFIG.owner.name.split(" ").map(n => n[0]).join("");
+    // Owner Photo or Initial in card
+    const ownerAvatarContainer = document.getElementById("owner-avatar-container");
+    if (ownerAvatarContainer) {
+      if (CONFIG.owner.photoUrl) {
+        ownerAvatarContainer.innerHTML = `<img src="${CONFIG.owner.photoUrl}" class="owner-avatar-img" alt="${CONFIG.owner.name}">`;
+      } else {
+        ownerAvatarContainer.textContent = CONFIG.owner.name.split(" ").map(n => n[0]).join("");
+      }
+    }
 
     const ownerName = document.querySelector(".owner-name");
     if (ownerName) ownerName.textContent = CONFIG.owner.name;
   }
 
-  // Hero Section Renderer
+  // Setup Juventus-style Fullscreen Intro Slideshow
+  function setupSplashHero() {
+    const slideshow = document.getElementById("splash-slideshow");
+    if (!slideshow) return;
+
+    // Pick 4-5 dynamic photos to showcase
+    const splashPhotoTags = ["Cover", "Exterior", "Interior", "Garden"];
+    const splashPhotos = [];
+    
+    // Select one photo for each category tag for variation
+    splashPhotoTags.forEach(tag => {
+      const match = activePhotos.find(p => p.tag.toLowerCase() === tag.toLowerCase());
+      if (match) splashPhotos.push(match);
+    });
+
+    // Fallback if tags not found
+    if (splashPhotos.length < 3) {
+      splashPhotos.push(...activePhotos.slice(0, 4));
+    }
+
+    // Render splash slideshow layers
+    slideshow.innerHTML = splashPhotos.map((photo, index) => `
+      <img src="${getDriveImageUrl(photo.id, 1600)}" class="splash-slide ${index === 0 ? 'active' : ''}" alt="Slideshow Image">
+    `).join("");
+
+    // Cycle slides randomly (similar to Juventus homepage)
+    let currentIdx = 0;
+    const slides = document.querySelectorAll(".splash-slide");
+    
+    if (slides.length <= 1) return;
+
+    setInterval(() => {
+      slides[currentIdx].classList.remove("active");
+      
+      // Select a random index different from current to guarantee transition
+      let nextIdx = currentIdx;
+      while (nextIdx === currentIdx) {
+        nextIdx = Math.floor(Math.random() * slides.length);
+      }
+      
+      currentIdx = nextIdx;
+      slides[currentIdx].classList.add("active");
+    }, 5000); // Transitions every 5 seconds
+  }
+
+  // Setup Navigation Bar transparency on scroll
+  function setupNavbarScroll() {
+    const navbar = document.getElementById("header-nav");
+    if (!navbar) return;
+
+    function checkScroll() {
+      // Transition past 100vh height minus navbar height
+      const threshold = window.innerHeight - 80;
+      if (window.scrollY > threshold) {
+        navbar.classList.remove("nav-transparent");
+        navbar.classList.add("nav-solid");
+      } else {
+        navbar.classList.remove("nav-solid");
+        navbar.classList.add("nav-transparent");
+      }
+    }
+
+    window.addEventListener("scroll", checkScroll);
+    // Initial check
+    checkScroll();
+  }
+
+  // Setup scroll indicator arrow click
+  function setupScrollIndicator() {
+    const indicator = document.getElementById("scroll-indicator");
+    if (!indicator) return;
+
+    indicator.addEventListener("click", () => {
+      // Scroll to start of main content
+      const contentStart = document.getElementById("main-content");
+      if (contentStart) {
+        contentStart.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  }
+
+  // Hero Section Renderer (inside content area)
   function renderHeroSection() {
     const coverPhoto = activePhotos.find(p => p.tag === "Cover") || activePhotos[0];
     const heroBg = document.querySelector(".hero-bg");
     if (heroBg && coverPhoto) {
-      heroBg.src = getDriveImageUrl(coverPhoto.id, 1600);
+      heroBg.src = getDriveImageUrl(coverPhoto.id, 1200);
     }
   }
 
@@ -133,13 +224,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!grid) return;
 
     grid.innerHTML = CONFIG.details.fasilitas.map(fac => {
-      // Highlight "Garasi Warung" to stress business value as requested
       const isHighlight = fac.name.toLowerCase().includes("warung") || fac.name.toLowerCase().includes("toko");
       return `
         <div class="facility-card ${isHighlight ? 'highlight-facility' : ''}">
           <div class="facility-icon">${SVG_ICONS[fac.icon] || ""}</div>
           <div class="facility-info">
-            <span class="facility-name">${fac.name} ${isHighlight ? '<span style="font-size: 0.7rem; color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.4); background: rgba(168, 85, 247, 0.1); padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; font-weight: 600;">Cocok Usaha</span>' : ''}</span>
+            <span class="facility-name">${fac.name} ${isHighlight ? '<span style="font-size: 0.68rem; color: #7C3AED; border: 1.5px solid rgba(124, 58, 237, 0.3); background: rgba(124, 58, 237, 0.08); padding: 2px 8px; border-radius: 100px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; font-weight: 700; font-family: var(--font-mono);">Cocok Usaha</span>' : ''}</span>
             <span class="facility-desc">${fac.desc}</span>
           </div>
         </div>
@@ -191,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
       track.innerHTML = '<li style="padding: 40px; text-align: center; width: 100%;">Tidak ada foto untuk kategori ini.</li>';
       if (nav) nav.innerHTML = "";
       if (thumbStrip) thumbStrip.innerHTML = "";
+      stopAutoplay();
       return;
     }
 
@@ -211,11 +302,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="carousel-dot ${index === 0 ? 'active' : ''}" data-index="${index}" aria-label="Slide ${index + 1}"></button>
       `).join("");
 
-      // Add click events to dots
       const dots = nav.querySelectorAll(".carousel-dot");
       dots.forEach(dot => {
         dot.addEventListener("click", () => {
           goToSlide(parseInt(dot.dataset.index));
+          resetAutoplay();
         });
       });
     }
@@ -228,17 +319,18 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `).join("");
 
-      // Add click events to thumbnails
       const thumbs = thumbStrip.querySelectorAll(".thumbnail-item");
       thumbs.forEach(thumb => {
         thumb.addEventListener("click", () => {
           goToSlide(parseInt(thumb.dataset.index));
+          resetAutoplay();
         });
       });
     }
 
-    // Reset slide position
+    // Reset slide position & start autoplay
     goToSlide(0);
+    startAutoplay();
 
     // Setup Click Event on main slide to launch Lightbox Zoom
     const slides = track.querySelectorAll(".carousel-slide");
@@ -247,6 +339,13 @@ document.addEventListener("DOMContentLoaded", () => {
         openLightbox(parseInt(slide.dataset.index));
       });
     });
+
+    // Pause autoplay on mouse hover over carousel
+    const wrapper = document.getElementById("gallery-carousel-wrapper");
+    if (wrapper) {
+      wrapper.addEventListener("mouseenter", stopAutoplay);
+      wrapper.addEventListener("mouseleave", startAutoplay);
+    }
   }
 
   // Slide Navigation
@@ -255,23 +354,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!track) return;
     
     currentSlideIndex = index;
-    
-    // Apply smooth sliding translation
     track.style.transform = `translateX(-${index * 100}%)`;
     
-    // Sync navigation dots
     const dots = document.querySelectorAll(".carousel-nav .carousel-dot");
     dots.forEach((dot, idx) => {
       dot.classList.toggle("active", idx === index);
     });
 
-    // Sync thumbnails
     const thumbs = document.querySelectorAll(".thumbnail-strip .thumbnail-item");
     thumbs.forEach((thumb, idx) => {
       thumb.classList.toggle("active", idx === index);
     });
 
-    // Auto scroll thumb strip to keep active thumbnail visible
     const activeThumb = thumbs[index];
     if (activeThumb) {
       const container = document.getElementById("thumbnail-strip");
@@ -285,7 +379,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Setup Arrow Controls for Carousel
+  // Autoplay Gallery Controller (Cycles every 4 seconds)
+  function startAutoplay() {
+    stopAutoplay(); // clear existing
+    if (filteredPhotos.length <= 1) return;
+    carouselAutoplayInterval = setInterval(() => {
+      let nextIdx = currentSlideIndex + 1;
+      if (nextIdx >= filteredPhotos.length) nextIdx = 0;
+      goToSlide(nextIdx);
+    }, 4000);
+  }
+
+  function stopAutoplay() {
+    if (carouselAutoplayInterval) {
+      clearInterval(carouselAutoplayInterval);
+      carouselAutoplayInterval = null;
+    }
+  }
+
+  function resetAutoplay() {
+    stopAutoplay();
+    startAutoplay();
+  }
+
+  // Arrow Controls for Carousel
   const prevBtn = document.getElementById("carousel-btn-prev");
   const nextBtn = document.getElementById("carousel-btn-next");
 
@@ -294,6 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let idx = currentSlideIndex - 1;
       if (idx < 0) idx = filteredPhotos.length - 1;
       goToSlide(idx);
+      resetAutoplay();
     });
   }
 
@@ -302,6 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let idx = currentSlideIndex + 1;
       if (idx >= filteredPhotos.length) idx = 0;
       goToSlide(idx);
+      resetAutoplay();
     });
   }
 
@@ -331,13 +450,11 @@ document.addEventListener("DOMContentLoaded", () => {
         valSewa.textContent = formatter.format(CONFIG.details.harga.bulanan);
         valTotal.textContent = formatter.format(CONFIG.details.harga.bulanan);
         
-        // Update price display on sidebar too
         const sidebarPriceVal = document.getElementById("sidebar-price-val");
         const sidebarPricePeriod = document.getElementById("sidebar-price-period");
         if (sidebarPriceVal) sidebarPriceVal.textContent = formatter.format(CONFIG.details.harga.bulanan).replace("Rp", "").trim();
         if (sidebarPricePeriod) sidebarPricePeriod.textContent = "/ Bulan";
         
-        // Sync WhatsApp direct link to mention monthly interest
         syncWhatsAppLink("Bulanan");
       } else {
         quarterlyBtn.classList.add("active");
@@ -346,13 +463,11 @@ document.addEventListener("DOMContentLoaded", () => {
         valSewa.textContent = formatter.format(CONFIG.details.harga.tigaBulanan);
         valTotal.textContent = formatter.format(CONFIG.details.harga.tigaBulanan);
         
-        // Update price display on sidebar too
         const sidebarPriceVal = document.getElementById("sidebar-price-val");
         const sidebarPricePeriod = document.getElementById("sidebar-price-period");
         if (sidebarPriceVal) sidebarPriceVal.textContent = formatter.format(CONFIG.details.harga.tigaBulanan).replace("Rp", "").trim();
         if (sidebarPricePeriod) sidebarPricePeriod.textContent = "/ 3 Bulan";
         
-        // Sync WhatsApp direct link to mention 3-month interest
         syncWhatsAppLink("Per 3 Bulan");
       }
     }
@@ -371,7 +486,6 @@ document.addEventListener("DOMContentLoaded", () => {
     monthlyBtn.addEventListener("click", () => setRentalPeriod("monthly"));
     quarterlyBtn.addEventListener("click", () => setRentalPeriod("quarterly"));
 
-    // Initial load: monthly
     setRentalPeriod("monthly");
   }
 
@@ -389,8 +503,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!modal || !closeBtn) return;
 
     closeBtn.addEventListener("click", closeLightbox);
-    
-    // Close on overlay click
     modal.addEventListener("click", (e) => {
       if (e.target === modal) closeLightbox();
     });
@@ -411,7 +523,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Keyboard controls
     document.addEventListener("keydown", (e) => {
       if (!modal.classList.contains("active")) return;
       if (e.key === "Escape") closeLightbox();
@@ -426,11 +537,13 @@ document.addEventListener("DOMContentLoaded", () => {
     
     modal.classList.add("active");
     updateLightboxImage(index);
+    stopAutoplay(); // pause main autoplay when zoom lightbox is active
   }
 
   function closeLightbox() {
     const modal = document.getElementById("lightbox-modal");
     if (modal) modal.classList.remove("active");
+    startAutoplay(); // resume autoplay
   }
 
   function updateLightboxImage(index) {
@@ -449,6 +562,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Start the initialization sequence
   init();
 });
