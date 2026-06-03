@@ -1,7 +1,7 @@
 const CONFIG = {
   // Google Apps Script Web App URL (leave empty to use the fallback static mapping below)
   // Example: "https://script.google.com/macros/s/.../exec"
-  appsScriptUrl: "",
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycbxb4a6n27Zca5T3v5h7WwTYmVWxWpI7aQX1vUybmAY_1PrLUtaDxb-XZqlcRVjxblbADg/exec",
 
   // Fallback static mapping of Google Drive File IDs (retrieved automatically from folder)
   assets: {
