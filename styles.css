@@ -186,16 +186,35 @@ body {
   gap: 12px;
 }
 
-/* Custom Image Logo Styling */
+/* Custom Image Logo Styling (Pure White) */
 .logo-image {
   height: 40px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 2px 10px rgba(99, 102, 241, 0.2));
+  filter: brightness(0) invert(1) drop-shadow(0 2px 8px rgba(255, 255, 255, 0.15));
   transition: var(--transition-smooth);
 }
 
 .logo-image:hover {
+  transform: scale(1.05);
+}
+
+/* Centered Splash Hero Logo */
+.splash-logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.splash-logo {
+  width: 180px;
+  height: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1) drop-shadow(0 4px 15px rgba(255, 255, 255, 0.2));
+  transition: var(--transition-smooth);
+}
+
+.splash-logo:hover {
   transform: scale(1.05);
 }
 
