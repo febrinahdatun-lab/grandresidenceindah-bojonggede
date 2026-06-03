@@ -436,37 +436,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!monthlyBtn || !quarterlyBtn || !labelDurasi || !valSewa || !valTotal) return;
 
-    const formatter = new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      maximumFractionDigits: 0
-    });
-
     function setRentalPeriod(period) {
       if (period === "monthly") {
         monthlyBtn.classList.add("active");
         quarterlyBtn.classList.remove("active");
         labelDurasi.textContent = "1 Bulan";
-        valSewa.textContent = formatter.format(CONFIG.details.harga.bulanan);
-        valTotal.textContent = formatter.format(CONFIG.details.harga.bulanan);
+        valSewa.textContent = "Hubungi Pemilik";
+        valTotal.textContent = "Hubungi Pemilik";
         
         const sidebarPriceVal = document.getElementById("sidebar-price-val");
         const sidebarPricePeriod = document.getElementById("sidebar-price-period");
-        if (sidebarPriceVal) sidebarPriceVal.textContent = formatter.format(CONFIG.details.harga.bulanan).replace("Rp", "").trim();
-        if (sidebarPricePeriod) sidebarPricePeriod.textContent = "/ Bulan";
+        if (sidebarPriceVal) {
+          sidebarPriceVal.textContent = "Hubungi Pemilik";
+          sidebarPriceVal.style.fontSize = "1.8rem";
+        }
+        if (sidebarPricePeriod) sidebarPricePeriod.textContent = "Tanya Skema Sewa & Harga";
         
         syncWhatsAppLink("Bulanan");
       } else {
         quarterlyBtn.classList.add("active");
         monthlyBtn.classList.remove("active");
         labelDurasi.textContent = "3 Bulan";
-        valSewa.textContent = formatter.format(CONFIG.details.harga.tigaBulanan);
-        valTotal.textContent = formatter.format(CONFIG.details.harga.tigaBulanan);
+        valSewa.textContent = "Hubungi Pemilik";
+        valTotal.textContent = "Hubungi Pemilik";
         
         const sidebarPriceVal = document.getElementById("sidebar-price-val");
         const sidebarPricePeriod = document.getElementById("sidebar-price-period");
-        if (sidebarPriceVal) sidebarPriceVal.textContent = formatter.format(CONFIG.details.harga.tigaBulanan).replace("Rp", "").trim();
-        if (sidebarPricePeriod) sidebarPricePeriod.textContent = "/ 3 Bulan";
+        if (sidebarPriceVal) {
+          sidebarPriceVal.textContent = "Hubungi Pemilik";
+          sidebarPriceVal.style.fontSize = "1.8rem";
+        }
+        if (sidebarPricePeriod) sidebarPricePeriod.textContent = "Tanya Skema Sewa & Harga";
         
         syncWhatsAppLink("Per 3 Bulan");
       }
@@ -474,7 +474,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function syncWhatsAppLink(schemeText) {
       const waButtons = document.querySelectorAll(".wa-contact-btn");
-      const baseMsg = `Halo Pak Febri, saya tertarik sewa kontrakan di Grand Residence Indah dengan skema pembayaran [${schemeText}]. Apakah bisa jadwal survei lokasi?`;
+      const baseMsg = `Halo Pak Febri, saya tertarik sewa kontrakan di Grand Residence Indah dengan skema pembayaran [${schemeText}]. Berapa harga sewa dan apakah bisa survei lokasi?`;
       const encodedMsg = encodeURIComponent(baseMsg);
       const customWaUrl = `https://api.whatsapp.com/send/?phone=6287888893111&text=${encodedMsg}&type=phone_number&app_absent=0`;
       
