@@ -991,26 +991,31 @@ body {
 }
 
 /* ==========================================================================
-   SCROLL ENTRANCE ANIMATIONS
+   SCROLL ENTRANCE ANIMATIONS (Futuristic Cosmic Warp style)
    ========================================================================== */
 
 .scroll-trigger-element {
   opacity: 0;
-  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
+  filter: blur(10px) saturate(40%);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
 }
 
+/* Warp 3D Perspective entries */
 .scroll-trigger-element.fade-in-up {
-  transform: translateY(40px);
+  transform: translateY(80px) scale(0.9) rotate3d(1, 0, 0, 10deg);
 }
 
 .scroll-trigger-element.scale-in {
-  transform: scale(0.96);
+  transform: scale(0.85) translateY(50px) rotate3d(0, 1, 0, -6deg);
 }
 
 .scroll-trigger-element.active-scroll {
   opacity: 1;
-  transform: translateY(0) scale(1) !important;
+  filter: blur(0px) saturate(100%);
+  transform: translateY(0) scale(1) rotate3d(0, 0, 0, 0deg) !important;
 }
 
 /* ==========================================================================
@@ -1483,35 +1488,86 @@ body {
    MODERN PREMIUM MICRO-ANIMATIONS & KEYFRAMES
    ========================================================================== */
 
-/* Slow Breathing Pulse for Ambient Background Glow Shapes */
-@keyframes ambientPulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.11;
+/* Slow Rotating Drift for Ambient Background Nebulas */
+@keyframes nebulaDrift {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.12;
   }
   50% {
-    transform: scale(1.1);
-    opacity: 0.16;
+    transform: scale(1.15) rotate(180deg);
+    opacity: 0.18;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 0.12;
   }
 }
 
-@keyframes ambientPulseCenter {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.11;
+@keyframes nebulaDriftCenter {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 0.12;
   }
   50% {
-    transform: translate(-50%, -50%) scale(1.08);
-    opacity: 0.16;
+    transform: translate(-48%, -52%) scale(1.12) rotate(180deg);
+    opacity: 0.18;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(360deg);
+    opacity: 0.12;
   }
 }
 
 .section-glow-bg {
-  animation: ambientPulse 15s ease-in-out infinite alternate;
+  animation: nebulaDrift 25s linear infinite;
 }
 
 .glow-contact {
-  animation: ambientPulseCenter 20s ease-in-out infinite alternate;
+  animation: nebulaDriftCenter 30s linear infinite;
+}
+
+/* Twinkling Space Star Particles */
+.cosmic-star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.star-1 {
+  top: 15%;
+  left: 10%;
+  animation: twinkleStar 4s infinite ease-in-out;
+}
+
+.star-2 {
+  top: 75%;
+  right: 15%;
+  animation: twinkleStar 6s infinite ease-in-out 1.5s;
+}
+
+.star-3 {
+  bottom: 20%;
+  left: 55%;
+  animation: twinkleStar 5s infinite ease-in-out 3s;
+}
+
+@keyframes twinkleStar {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(0.7);
+    box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.4);
+    box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.85);
+  }
 }
 
 /* Staggered Entrance Animations for Specifications Tiles */
