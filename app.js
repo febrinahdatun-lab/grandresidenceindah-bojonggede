@@ -60,16 +60,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize Components
     setupSplashHero();
     setupNavbarScroll();
-    renderHeroSection();
     renderSpecifications();
     renderFacilities();
     renderVideoTour(videoData);
     setupGalleryFilters();
     renderGallery();
-    setupRentCalculator();
+    setupRentSchemeSelector();
     setupLightbox();
     setupStaticData();
     setupScrollIndicator();
+    setupScrollAnimations();
   }
 
   // Set up owner info, maps, links in static sections
@@ -101,16 +101,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Owner Photo or Initial in card
-    const ownerAvatarContainer = document.getElementById("owner-avatar-container");
+    const ownerAvatarContainer = document.getElementById("owner-avatar-lg-container");
     if (ownerAvatarContainer) {
       if (CONFIG.owner.photoUrl) {
-        ownerAvatarContainer.innerHTML = `<img src="${CONFIG.owner.photoUrl}" class="owner-avatar-img" alt="${CONFIG.owner.name}">`;
+        ownerAvatarContainer.innerHTML = `<img src="${CONFIG.owner.photoUrl}" class="owner-avatar-img-lg" alt="${CONFIG.owner.name}">`;
       } else {
         ownerAvatarContainer.textContent = CONFIG.owner.name.split(" ").map(n => n[0]).join("");
       }
     }
 
-    const ownerName = document.querySelector(".owner-name");
+    const ownerName = document.querySelector(".owner-name-lg");
     if (ownerName) ownerName.textContent = CONFIG.owner.name;
   }
 
@@ -193,15 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
         contentStart.scrollIntoView({ behavior: "smooth" });
       }
     });
-  }
-
-  // Hero Section Renderer (inside content area)
-  function renderHeroSection() {
-    const coverPhoto = activePhotos.find(p => p.tag === "Cover") || activePhotos[0];
-    const heroBg = document.querySelector(".hero-bg");
-    if (heroBg && coverPhoto) {
-      heroBg.src = getDriveImageUrl(coverPhoto.id, 1200);
-    }
   }
 
   // Specifications Tiles Renderer
@@ -425,51 +416,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================================================
-  // RENT CALCULATOR
+  // RENT SCHEME SELECTOR & CONTACT SYNC
   // ==========================================================================
-  function setupRentCalculator() {
-    const monthlyBtn = document.getElementById("calc-monthly-btn");
-    const quarterlyBtn = document.getElementById("calc-quarterly-btn");
-    const labelDurasi = document.getElementById("calc-label-durasi");
-    const valSewa = document.getElementById("calc-val-sewa");
-    const valTotal = document.getElementById("calc-total-val");
+  function setupRentSchemeSelector() {
+    const schemeButtons = document.querySelectorAll(".scheme-btn");
+    if (!schemeButtons.length) return;
 
-    if (!monthlyBtn || !quarterlyBtn || !labelDurasi || !valSewa || !valTotal) return;
+    function setScheme(selectedScheme) {
+      schemeButtons.forEach(btn => {
+        const isActive = btn.dataset.scheme === selectedScheme;
+        btn.classList.toggle("active", isActive);
+      });
 
-    function setRentalPeriod(period) {
-      if (period === "monthly") {
-        monthlyBtn.classList.add("active");
-        quarterlyBtn.classList.remove("active");
-        labelDurasi.textContent = "1 Bulan";
-        valSewa.textContent = "Hubungi Pemilik";
-        valTotal.textContent = "Hubungi Pemilik";
-        
-        const sidebarPriceVal = document.getElementById("sidebar-price-val");
-        const sidebarPricePeriod = document.getElementById("sidebar-price-period");
-        if (sidebarPriceVal) {
-          sidebarPriceVal.textContent = "Hubungi Pemilik";
-          sidebarPriceVal.style.fontSize = "1.8rem";
-        }
-        if (sidebarPricePeriod) sidebarPricePeriod.textContent = "Tanya Skema Sewa & Harga";
-        
-        syncWhatsAppLink("Bulanan");
-      } else {
-        quarterlyBtn.classList.add("active");
-        monthlyBtn.classList.remove("active");
-        labelDurasi.textContent = "3 Bulan";
-        valSewa.textContent = "Hubungi Pemilik";
-        valTotal.textContent = "Hubungi Pemilik";
-        
-        const sidebarPriceVal = document.getElementById("sidebar-price-val");
-        const sidebarPricePeriod = document.getElementById("sidebar-price-period");
-        if (sidebarPriceVal) {
-          sidebarPriceVal.textContent = "Hubungi Pemilik";
-          sidebarPriceVal.style.fontSize = "1.8rem";
-        }
-        if (sidebarPricePeriod) sidebarPricePeriod.textContent = "Tanya Skema Sewa & Harga";
-        
-        syncWhatsAppLink("Per 3 Bulan");
-      }
+      // Update WhatsApp URL
+      syncWhatsAppLink(selectedScheme);
     }
 
     function syncWhatsAppLink(schemeText) {
@@ -483,10 +443,56 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    monthlyBtn.addEventListener("click", () => setRentalPeriod("monthly"));
-    quarterlyBtn.addEventListener("click", () => setRentalPeriod("quarterly"));
+    schemeButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        setScheme(btn.dataset.scheme);
+      });
+    });
 
-    setRentalPeriod("monthly");
+    // Default to the first scheme (Per 3 Bulan)
+    setScheme("3 Bulan");
+  }
+
+  // ==========================================================================
+  // SCROLL ENTRANCE ANIMATIONS (Intersection Observer & Fallbacks)
+  // ==========================================================================
+  function setupScrollAnimations() {
+    const triggerElements = document.querySelectorAll(".scroll-trigger-element");
+    if (!triggerElements.length) return;
+
+    // Fallback if IntersectionObserver is not supported
+    if (!('IntersectionObserver' in window)) {
+      triggerElements.forEach(el => el.classList.add("active-scroll"));
+      return;
+    }
+
+    const observerOptions = {
+      root: null,
+      threshold: 0.02, // Trigger early as soon as 2% is visible
+      rootMargin: "0px 0px 120px 0px" // Trigger 120px before entering viewport
+    };
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("active-scroll");
+          obs.unobserve(entry.target); // Trigger once
+        }
+      });
+    }, observerOptions);
+
+    triggerElements.forEach(el => observer.observe(el));
+
+    // Safety fallback: immediately trigger elements that are already near the viewport
+    setTimeout(() => {
+      triggerElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 120) {
+          el.classList.add("active-scroll");
+          observer.unobserve(el);
+        }
+      });
+    }, 450);
   }
 
   // ==========================================================================

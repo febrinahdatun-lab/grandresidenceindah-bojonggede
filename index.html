@@ -34,6 +34,7 @@
         <li class="nav-link"><a href="#galeri" id="nav-link-gallery">Galeri</a></li>
         <li class="nav-link"><a href="#fasilitas" id="nav-link-facilities">Fasilitas</a></li>
         <li class="nav-link"><a href="#lokasi" id="nav-link-location">Lokasi</a></li>
+        <li class="nav-link"><a href="#informasi-sewa" id="nav-link-rent">Sewa & Kontak</a></li>
       </ul>
     </nav>
   </header>
@@ -60,7 +61,7 @@
       <h2 class="splash-title">Hunian Nyaman & Area Usaha Strategis</h2>
       <p class="splash-desc">Rumah kontrakan siap huni di Grand Residence Indah, Susukan, Bojonggede, Bogor. Tempat tinggal ideal yang menunjang mobilitas dan bisnis Anda.</p>
       <div class="splash-ctas">
-        <a href="#calculator" class="splash-btn splash-btn-primary" id="btn-splash-calc">Simulasi Sewa</a>
+        <a href="#informasi-sewa" class="splash-btn splash-btn-primary" id="btn-splash-calc">Informasi Sewa</a>
         <a class="splash-btn splash-btn-secondary wa-contact-btn" id="btn-splash-wa" target="_blank">Hubungi Pemilik</a>
       </div>
     </div>
@@ -75,50 +76,13 @@
     </div>
   </section>
 
-  <!-- Main Canvas Content -->
-  <main class="canvas-container" id="main-content">
+  <!-- Main Viewport Sections -->
+  <main id="main-content">
     
-    <!-- Left Main Canvas Workspace -->
-    <div class="canvas-main">
-      
-      <!-- Hero Highlight Widget (Inline visual summary) -->
-      <section class="hero-widget" id="hero-showcase">
-        <div class="hero-bg-wrapper">
-          <img class="hero-bg" src="" alt="Detail Kontrakan Rumah" id="hero-cover-img">
-        </div>
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-          <span class="hero-tag">
-            <svg viewBox="0 0 24 24">
-              <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
-            </svg>
-            SIAP HUNI & RAPI
-          </span>
-          <h1 class="hero-title">Grand Residence Indah</h1>
-          <p class="hero-description">Disewakan rumah kontrakan bersih, nyaman, dan bebas banjir di Bojonggede. Sangat cocok untuk tempat tinggal sekaligus membuka usaha warung/toko.</p>
-          <div class="hero-pills">
-            <div class="hero-pill">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
-              <span>84 m²</span>
-            </div>
-            <div class="hero-pill">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M2 4v16M2 8h20M2 12h20M2 16h20M22 4v16M18 8v4M6 8v4"></path></svg>
-              <span>2 KT</span>
-            </div>
-            <div class="hero-pill">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-11-7-11S5 10.7 5 15a7 7 0 0 0 7 7z"></path></svg>
-              <span>2 KM</span>
-            </div>
-            <div class="hero-pill">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-              <span>SHM</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Specifications Grid Widget -->
-      <section class="spec-widget premium-panel" id="spesifikasi">
+    <!-- Section 1: Spesifikasi Rumah -->
+    <section class="viewport-section" id="spesifikasi">
+      <div class="section-glow-bg glow-specs"></div>
+      <div class="section-content-wrapper scroll-trigger-element scale-in">
         <h2 class="widget-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
           Spesifikasi Rumah
@@ -126,10 +90,13 @@
         <div class="spec-grid" id="spec-grid-container">
           <!-- Populated by JavaScript -->
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Media Shower Widget (Gallery Carousel) -->
-      <section class="gallery-widget premium-panel" id="galeri">
+    <!-- Section 2: Dokumentasi Foto -->
+    <section class="viewport-section" id="galeri">
+      <div class="section-glow-bg glow-gallery"></div>
+      <div class="section-content-wrapper scroll-trigger-element fade-in-up">
         <div class="gallery-header">
           <h2 class="widget-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
@@ -169,10 +136,13 @@
         <div class="thumbnail-strip" id="thumbnail-strip">
           <!-- Populated by JavaScript -->
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Video Tour Widget -->
-      <section class="video-widget premium-panel" id="video-tour">
+    <!-- Section 3: Video Tour -->
+    <section class="viewport-section" id="video-tour">
+      <div class="section-glow-bg glow-video"></div>
+      <div class="section-content-wrapper scroll-trigger-element scale-in">
         <h2 class="widget-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
           Video Tour
@@ -180,10 +150,13 @@
         <div class="video-player-container" id="video-tour-container">
           <!-- Populated by JavaScript -->
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Facilities Grid Widget -->
-      <section class="facilities-widget premium-panel" id="fasilitas">
+    <!-- Section 4: Fasilitas Lengkap -->
+    <section class="viewport-section" id="fasilitas">
+      <div class="section-glow-bg glow-facilities"></div>
+      <div class="section-content-wrapper scroll-trigger-element fade-in-up">
         <h2 class="widget-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
           Fasilitas Lengkap
@@ -191,10 +164,13 @@
         <div class="facilities-grid" id="facilities-grid-container">
           <!-- Populated by JavaScript -->
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Location Widget -->
-      <section class="location-widget premium-panel" id="lokasi">
+    <!-- Section 5: Lokasi & Akses -->
+    <section class="viewport-section" id="lokasi">
+      <div class="section-glow-bg glow-location"></div>
+      <div class="section-content-wrapper scroll-trigger-element scale-in">
         <h2 class="widget-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
           Lokasi & Akses
@@ -216,90 +192,75 @@
             Buka di Google Maps
           </a>
         </div>
-      </section>
-
-    </div>
-
-    <!-- Right Sidebar Space -->
-    <aside class="canvas-sidebar">
-      
-      <!-- Price Display Card -->
-      <div class="price-widget" id="price-card">
-        <span class="sidebar-price-label">Harga Sewa Rumah</span>
-        <div class="sidebar-price-display">
-          <span class="price-val" id="sidebar-price-val" style="font-size: 1.8rem;">Hubungi Pemilik</span>
-          <span class="price-period" id="sidebar-price-period">Tanya Skema Sewa & Harga</span>
-        </div>
-        <div class="contact-buttons">
-          <a class="btn-cta btn-whatsapp wa-contact-btn" id="btn-wa-sidebar" target="_blank">
-            <svg viewBox="0 0 448 512">
-              <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L3 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
-            </svg>
-            Tanya Pemilik Via WhatsApp
-          </a>
-        </div>
       </div>
+    </section>
 
-      <!-- Price Calculator Widget -->
-      <div class="calc-widget premium-panel" id="calculator">
+    <!-- Section 6: Informasi Sewa & Kontak Pemilik -->
+    <section class="viewport-section" id="informasi-sewa">
+      <div class="section-glow-bg glow-contact"></div>
+      <div class="section-content-wrapper scroll-trigger-element fade-in-up">
         <h2 class="widget-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
-          Kalkulator Sewa
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          Informasi & Kontak Pemilik
         </h2>
         
-        <!-- Toggle -->
-        <div class="calc-toggle-container">
-          <button class="calc-btn active" id="calc-monthly-btn" data-period="monthly">Bulanan</button>
-          <button class="calc-btn" id="calc-quarterly-btn" data-period="quarterly">Per 3 Bulan</button>
-        </div>
+        <div class="unified-contact-card premium-panel">
+          <div class="contact-card-split">
+            <!-- Left Info Panel -->
+            <div class="contact-info-block">
+              <span class="info-badge">Skema Pembayaran</span>
+              <p class="info-text">
+                Rumah kontrakan disewakan dengan sistem pembayaran fleksibel berkala. Silakan pilih skema sewa pilihan Anda di bawah ini:
+              </p>
+              
+              <!-- Rent Scheme Selection Tabs -->
+              <div class="scheme-select-group" id="scheme-select-container">
+                <button class="scheme-btn active" data-scheme="3 Bulan">Per 3 Bulan</button>
+                <button class="scheme-btn" data-scheme="6 Bulan">Per 6 Bulan</button>
+                <button class="scheme-btn" data-scheme="12 Bulan">Per 12 Bulan</button>
+              </div>
 
-        <!-- Breakdown Details -->
-        <div class="calc-details">
-          <div class="calc-row">
-            <span class="calc-label">Skema Pembayaran</span>
-            <span class="calc-val" id="calc-label-durasi">1 Bulan</span>
-          </div>
-          <div class="calc-row">
-            <span class="calc-label">Harga Pokok Sewa</span>
-            <span class="calc-val" id="calc-val-sewa">Hubungi Pemilik</span>
-          </div>
-          <div class="calc-row">
-            <span class="calc-label">Jaminan Deposito</span>
-            <span class="calc-val" style="color: var(--text-primary); font-weight: 700;">10% dari Harga Sewa</span>
-          </div>
-          <div class="calc-row">
-            <span class="calc-label">Biaya Administrasi</span>
-            <span class="calc-val" style="color: var(--emerald); font-weight: 700;">Gratis</span>
-          </div>
-        </div>
+              <!-- Deposit details -->
+              <div class="deposit-info-box">
+                <span class="deposit-label">Uang Jaminan Deposito:</span>
+                <span class="deposit-val">10% dari Harga Sewa</span>
+              </div>
+              
+              <p class="price-disclaimer-text">
+                * Nominal harga sewa tidak dicantumkan di sini. Untuk menanyakan harga sewa serta menjadwalkan survei, silakan hubungi pemilik kontrakan.
+              </p>
+            </div>
 
-        <div class="calc-total-box">
-          <span class="calc-total-label">Total Awal</span>
-          <span class="calc-total-price" id="calc-total-val">Hubungi Pemilik</span>
+            <!-- Right Profile & Contact Panel -->
+            <div class="contact-profile-block">
+              <div class="owner-profile-lg">
+                <div class="owner-avatar-lg" id="owner-avatar-lg-container">FN</div>
+                <div class="owner-meta-lg">
+                  <span class="owner-name-lg">Febri Nahdatun</span>
+                  <span class="owner-title-lg">Pemilik Kontrakan</span>
+                </div>
+              </div>
+              
+              <p class="owner-p-desc">
+                Hubungi Pak Febri via WhatsApp atau Telegram untuk respon cepat mengenai ketersediaan unit dan negosiasi.
+              </p>
+              
+              <div class="contact-actions-vertical">
+                <a class="btn-cta btn-whatsapp wa-contact-btn" id="btn-wa-unified" target="_blank">
+                  <svg viewBox="0 0 448 512" fill="currentColor">
+                    <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L3 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+                  </svg>
+                  Tanya Harga via WhatsApp
+                </a>
+                <a class="btn-cta btn-telegram tg-contact-btn" id="btn-tg-unified" target="_blank">
+                  Hubungi via Telegram
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- Owner Info Profile Widget -->
-      <div class="owner-widget premium-panel" id="owner-card">
-        <div class="owner-profile">
-          <div class="owner-avatar" id="owner-avatar-container">FN</div>
-          <div class="owner-details">
-            <span class="owner-name">Febri Nahdatun</span>
-            <span class="owner-title">Pemilik Kontrakan</span>
-          </div>
-        </div>
-        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px;">Hubungi via WhatsApp atau Telegram untuk menjadwalkan survei lokasi rumah. Respon cepat.</p>
-        <div class="contact-buttons">
-          <a class="btn-cta btn-whatsapp wa-contact-btn" id="btn-wa-owner" target="_blank">
-            Hubungi WhatsApp
-          </a>
-          <a class="btn-cta btn-telegram tg-contact-btn" id="btn-tg-owner" target="_blank">
-            Hubungi Telegram
-          </a>
-        </div>
-      </div>
-
-    </aside>
+    </section>
 
   </main>
 
