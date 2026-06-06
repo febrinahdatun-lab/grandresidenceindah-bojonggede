@@ -34,35 +34,51 @@ document.addEventListener("DOMContentLoaded", () => {
     return `https://drive.google.com/thumbnail?id=${id}&sz=w${width}`;
   }
 
+  // Helper to classify a photo name into one of the 8 category tags
+  function classifyPhotoTag(filename) {
+    const name = filename.toLowerCase();
+    if (name.includes("cover")) return "halaman-depan";
+    if (name.includes("halaman")) return "halaman-depan";
+    if (name.includes("garasi mobil") || name.includes("garasi_mobil")) return "garasi-mobil";
+    if (name.includes("garasi warung") || name.includes("garasi_warung") || name.includes("warung")) return "garasi-warung";
+    if (name.includes("ruang tamu") || name.includes("ruang_tamu") || name.includes("tamu")) return "ruang-tamu";
+    if (name.includes("dapur") || name.includes("taman") || name.includes("kolam")) return "dapur-taman-kolam";
+    if (name.includes("mushollah") || name.includes("mushola")) return "ruang-mushollah";
+    if (name.includes("kamar 1") || name.includes("kamar mandi") || name.includes("kamar_mandi")) return "kamar-1-mandi";
+    if (name.includes("kamar 2")) return "kamar-2";
+    
+    // Fallbacks
+    if (name.includes("garasi")) return "garasi-mobil";
+    return "halaman-depan";
+  }
+
+  // Get human-readable Indonesian label for each category tag
+  function getCategoryLabel(tag) {
+    const labels = {
+      "halaman-depan": "Halaman Depan",
+      "garasi-mobil": "Garasi Mobil",
+      "garasi-warung": "Garasi Warung",
+      "ruang-tamu": "Ruang Tamu",
+      "dapur-taman-kolam": "Dapur & Kolam",
+      "ruang-mushollah": "Ruang Mushollah",
+      "kamar-1-mandi": "Kamar 1 & Mandi",
+      "kamar-2": "Kamar 2"
+    };
+    return labels[tag] || "Lainnya";
+  }
+
   // Load and Initialize Data
   async function init() {
-    let rawPhotos = CONFIG.assets.photos;
-    let videoData = CONFIG.assets.video;
-
-    // Check if Apps Script is configured
-    if (CONFIG.appsScriptUrl) {
-      try {
-        const response = await fetch(CONFIG.appsScriptUrl);
-        const data = await response.json();
-        if (data.success) {
-          rawPhotos = data.photos.length ? data.photos : rawPhotos;
-          videoData = data.video ? data.video : videoData;
-          console.log("Assets loaded dynamically via Apps Script.");
-        }
-      } catch (err) {
-        console.warn("Failed to fetch from Apps Script, falling back to static config mapping.", err);
-      }
-    }
-
-    activePhotos = rawPhotos;
+    // 1. Load static fallback data instantly for instant rendering
+    activePhotos = CONFIG.assets.photos;
     filteredPhotos = [...activePhotos];
 
-    // Initialize Components
+    // 2. Initialize Components
     setupSplashHero();
     setupNavbarScroll();
     renderSpecifications();
     renderFacilities();
-    renderVideoTour(videoData);
+    renderVideoTour(CONFIG.assets.video);
     setupGalleryFilters();
     renderGallery();
     setupRentSchemeSelector();
@@ -70,6 +86,158 @@ document.addEventListener("DOMContentLoaded", () => {
     setupStaticData();
     setupScrollIndicator();
     setupScrollAnimations();
+
+    // 3. Initialize dynamic space animations (starfield & shooting stars)
+    setupSpaceAnimations();
+
+    // 4. Check for dynamic Google Apps Script updates in background
+    fetchDynamicData();
+  }
+
+  // Background dynamic sync check
+  async function fetchDynamicData() {
+    if (!CONFIG.appsScriptUrl) {
+      console.log("No Apps Script URL configured. Running on offline cached metadata.");
+      return;
+    }
+    
+    try {
+      console.log("Background checking Google Apps Script for new media uploads...");
+      const response = await fetch(CONFIG.appsScriptUrl);
+      const data = await response.json();
+      
+      if (data.success && data.photos && data.photos.length) {
+        const existingIds = new Set(activePhotos.map(p => p.id));
+        const newPhotos = data.photos;
+        
+        let hasChanges = false;
+        newPhotos.forEach(p => {
+          if (!existingIds.has(p.id)) {
+            hasChanges = true;
+          }
+        });
+        
+        if (hasChanges || newPhotos.length !== activePhotos.length) {
+          console.log("New uploads detected in Google Drive! Updating page gallery...");
+          activePhotos = newPhotos;
+          
+          // Re-evaluate filtered photos using active tag
+          if (activeFilter === "all") {
+            filteredPhotos = [...activePhotos];
+          } else {
+            filteredPhotos = activePhotos.filter(p => p.tag.toLowerCase() === activeFilter);
+          }
+          
+          // Smoothly re-render gallery components
+          setupSplashHero();
+          renderGallery();
+          
+          if (data.video && data.video.embedUrl && data.video.embedUrl !== CONFIG.assets.video.embedUrl) {
+            renderVideoTour(data.video);
+          }
+        } else {
+          console.log("Google Drive is fully in sync. No new uploads detected.");
+        }
+      }
+    } catch (err) {
+      console.warn("Background Apps Script sync failed (using offline cached metadata):", err);
+    }
+  }
+
+  // Dynamic Space Starfield & Shooting Stars Controller
+  function setupSpaceAnimations() {
+    const spaceSections = [
+      document.getElementById("splash-hero"),
+      document.getElementById("spesifikasi"),
+      document.getElementById("galeri"),
+      document.getElementById("video-tour"),
+      document.getElementById("fasilitas"),
+      document.getElementById("lokasi"),
+      document.getElementById("informasi-sewa")
+    ];
+
+    spaceSections.forEach(section => {
+      if (!section) return;
+
+      // Create a starry background container
+      const starfield = document.createElement("div");
+      starfield.className = "space-starfield-container";
+      starfield.style.position = "absolute";
+      starfield.style.top = "0";
+      starfield.style.left = "0";
+      starfield.style.width = "100%";
+      starfield.style.height = "100%";
+      starfield.style.pointerEvents = "none";
+      starfield.style.zIndex = "1";
+      
+      // Clean static stars inside this section
+      const oldStars = section.querySelectorAll(".cosmic-star, .shooting-star");
+      oldStars.forEach(s => s.remove());
+
+      // Generate 35-45 stars per section
+      const numStars = 35 + Math.floor(Math.random() * 10);
+      for (let i = 0; i < numStars; i++) {
+        const star = document.createElement("div");
+        star.className = "cosmic-star-particle";
+        
+        const size = (1 + Math.random() * 2.2).toFixed(1);
+        const top = (Math.random() * 100).toFixed(1);
+        const left = (Math.random() * 100).toFixed(1);
+        const delay = (Math.random() * 6).toFixed(1);
+        const duration = (3.5 + Math.random() * 4.5).toFixed(1);
+        const opacity = (0.2 + Math.random() * 0.7).toFixed(1);
+
+        star.style.position = "absolute";
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.background = "#ffffff";
+        star.style.borderRadius = "50%";
+        star.style.top = `${top}%`;
+        star.style.left = `${left}%`;
+        star.style.opacity = opacity;
+        star.style.boxShadow = `0 0 ${size * 3}px ${size / 2}px rgba(255, 255, 255, 0.8)`;
+        star.style.animation = `twinkleStar ${duration}s infinite ease-in-out ${delay}s`;
+        
+        starfield.appendChild(star);
+      }
+      section.insertBefore(starfield, section.firstChild);
+    });
+
+    // Shooting Stars Scheduler
+    function triggerShootingStar() {
+      const activeSections = spaceSections.filter(s => s !== null);
+      if (!activeSections.length) return;
+      
+      const randomSection = activeSections[Math.floor(Math.random() * activeSections.length)];
+      const star = document.createElement("div");
+      const isLeftToRight = Math.random() > 0.5;
+      
+      star.className = `shooting-star ${isLeftToRight ? 'shoot-l2r' : 'shoot-r2l'}`;
+      
+      const startTop = 5 + Math.random() * 55;
+      star.style.top = `${startTop}%`;
+      
+      if (isLeftToRight) {
+        star.style.left = `${-50 + Math.random() * 40}px`;
+      } else {
+        star.style.right = `${-50 + Math.random() * 40}px`;
+      }
+      
+      randomSection.appendChild(star);
+      
+      setTimeout(() => {
+        if (star.parentNode === randomSection) {
+          randomSection.removeChild(star);
+        }
+      }, 1250);
+    }
+
+    // Interval to fire shooting stars
+    setInterval(triggerShootingStar, 5000 + Math.random() * 5000);
+    
+    // Trigger initial ones
+    setTimeout(triggerShootingStar, 1500);
+    setTimeout(triggerShootingStar, 4000);
   }
 
   // Set up owner info, maps, links in static sections
@@ -120,12 +288,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!slideshow) return;
 
     // Pick 4-5 dynamic photos to showcase
-    const splashPhotoTags = ["Cover", "Exterior", "Interior", "Garden"];
+    const splashPhotoTags = ["halaman-depan", "garasi-mobil", "ruang-tamu", "dapur-taman-kolam"];
     const splashPhotos = [];
     
     // Select one photo for each category tag for variation
     splashPhotoTags.forEach(tag => {
-      const match = activePhotos.find(p => p.tag.toLowerCase() === tag.toLowerCase());
+      const match = activePhotos.find(p => classifyPhotoTag(p.name) === tag);
       if (match) splashPhotos.push(match);
     });
 
@@ -251,7 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (activeFilter === "all") {
           filteredPhotos = [...activePhotos];
         } else {
-          filteredPhotos = activePhotos.filter(p => p.tag.toLowerCase() === activeFilter);
+          filteredPhotos = activePhotos.filter(p => classifyPhotoTag(p.name) === activeFilter);
         }
         
         currentSlideIndex = 0;
@@ -277,15 +445,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Render Track Slides
-    track.innerHTML = filteredPhotos.map((photo, index) => `
+    track.innerHTML = filteredPhotos.map((photo, index) => {
+      const tagLabel = getCategoryLabel(classifyPhotoTag(photo.name));
+      return `
       <li class="carousel-slide" data-index="${index}">
         <img class="carousel-img" src="${getDriveImageUrl(photo.id, 1200)}" alt="${photo.name}" loading="lazy">
         <div class="carousel-slide-caption">
           <span>${photo.name.replace(/^\d+\.\s*/, "").split(".")[0]}</span>
-          <span class="slide-tag">${photo.tag}</span>
+          <span class="slide-tag">${tagLabel}</span>
         </div>
       </li>
-    `).join("");
+    `;}).join("");
 
     // Render Nav Dots
     if (nav) {
@@ -496,9 +666,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================================================
-  // LIGHTBOX MODAL
+  // LIGHTBOX MODAL (3D PowerPoint Gallery Transition & Swipe gestures)
   // ==========================================================================
   let lightboxActiveIndex = 0;
+  let lightboxTransitioning = false;
 
   function setupLightbox() {
     const modal = document.getElementById("lightbox-modal");
@@ -510,14 +681,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     closeBtn.addEventListener("click", closeLightbox);
     modal.addEventListener("click", (e) => {
-      if (e.target === modal) closeLightbox();
+      if (e.target === modal || e.target.id === "lightbox-slides-wrapper") {
+        closeLightbox();
+      }
     });
 
     if (prevBtn) {
       prevBtn.addEventListener("click", () => {
         let idx = lightboxActiveIndex - 1;
         if (idx < 0) idx = filteredPhotos.length - 1;
-        updateLightboxImage(idx);
+        transitionTo(idx, "prev");
       });
     }
 
@@ -525,7 +698,7 @@ document.addEventListener("DOMContentLoaded", () => {
       nextBtn.addEventListener("click", () => {
         let idx = lightboxActiveIndex + 1;
         if (idx >= filteredPhotos.length) idx = 0;
-        updateLightboxImage(idx);
+        transitionTo(idx, "next");
       });
     }
 
@@ -535,37 +708,205 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.key === "ArrowLeft") prevBtn && prevBtn.click();
       if (e.key === "ArrowRight") nextBtn && nextBtn.click();
     });
+
+    // Touch Swipe Event Listeners for Mobile devices (Android/iOS)
+    let startX = 0;
+    let startY = 0;
+
+    modal.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    modal.addEventListener("touchend", (e) => {
+      if (lightboxTransitioning) return;
+      
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+
+      const diffX = endX - startX;
+      const diffY = endY - startY;
+
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        if (diffX > 0) {
+          // Swipe right -> Prev slide
+          let idx = lightboxActiveIndex - 1;
+          if (idx < 0) idx = filteredPhotos.length - 1;
+          transitionTo(idx, "prev");
+        } else {
+          // Swipe left -> Next slide
+          let idx = lightboxActiveIndex + 1;
+          if (idx >= filteredPhotos.length) idx = 0;
+          transitionTo(idx, "next");
+        }
+      }
+    }, { passive: true });
+  }
+
+  function renderLightboxSlides(index) {
+    const wrapper = document.getElementById("lightbox-slides-wrapper");
+    if (!wrapper) return;
+    wrapper.innerHTML = "";
+
+    const len = filteredPhotos.length;
+    if (len === 0) return;
+
+    const prevIdx = (index - 1 + len) % len;
+    const nextIdx = (index + 1) % len;
+
+    // Helper to create slide element
+    function createSlideElement(idx, positionClass) {
+      const photo = filteredPhotos[idx];
+      const slide = document.createElement("div");
+      slide.className = `lightbox-slide ${positionClass}`;
+      slide.dataset.index = idx;
+      slide.innerHTML = `<img src="${getDriveImageUrl(photo.id, 1600)}" alt="${photo.name}" class="lightbox-img">`;
+      
+      // Standby slide click triggers navigation
+      slide.addEventListener("click", () => {
+        if (slide.classList.contains("prev-slide")) {
+          transitionTo(prevIdx, "prev");
+        } else if (slide.classList.contains("next-slide")) {
+          transitionTo(nextIdx, "next");
+        }
+      });
+      return slide;
+    }
+
+    if (len === 1) {
+      wrapper.appendChild(createSlideElement(index, "active-slide"));
+    } else if (len === 2) {
+      wrapper.appendChild(createSlideElement(prevIdx, "prev-slide"));
+      wrapper.appendChild(createSlideElement(index, "active-slide"));
+    } else {
+      wrapper.appendChild(createSlideElement(prevIdx, "prev-slide"));
+      wrapper.appendChild(createSlideElement(index, "active-slide"));
+      wrapper.appendChild(createSlideElement(nextIdx, "next-slide"));
+    }
   }
 
   function openLightbox(index) {
     const modal = document.getElementById("lightbox-modal");
-    if (!modal) return;
-    
+    const wrapper = document.getElementById("lightbox-slides-wrapper");
+    if (!modal || !wrapper) return;
+
+    lightboxActiveIndex = index;
+    lightboxTransitioning = false;
+
+    // Render the initial 3 slides
+    renderLightboxSlides(index);
+
+    const photo = filteredPhotos[index];
+    const caption = document.getElementById("lightbox-caption");
+    if (caption && photo) {
+      caption.textContent = photo.name.replace(/^\d+\.\s*/, "").split(".")[0];
+    }
+
     modal.classList.add("active");
-    updateLightboxImage(index);
-    stopAutoplay(); // pause main autoplay when zoom lightbox is active
+    stopAutoplay();
   }
 
   function closeLightbox() {
     const modal = document.getElementById("lightbox-modal");
     if (modal) modal.classList.remove("active");
-    startAutoplay(); // resume autoplay
+    
+    // Clear wrapper DOM elements after the 300ms CSS fade-out animation completes
+    // to prevent any click-blocking or overlay bugs
+    setTimeout(() => {
+      const wrapper = document.getElementById("lightbox-slides-wrapper");
+      if (wrapper && modal && !modal.classList.contains("active")) {
+        wrapper.innerHTML = "";
+      }
+    }, 310);
+    
+    startAutoplay();
   }
 
-  function updateLightboxImage(index) {
-    lightboxActiveIndex = index;
-    const img = document.getElementById("lightbox-img");
+  function transitionTo(idx, direction) {
+    if (lightboxTransitioning || filteredPhotos.length <= 1) return;
+    lightboxTransitioning = true;
+
+    const wrapper = document.getElementById("lightbox-slides-wrapper");
+    const len = filteredPhotos.length;
+    const photo = filteredPhotos[idx];
+    
     const caption = document.getElementById("lightbox-caption");
-    const photo = filteredPhotos[index];
-
-    if (img && photo) {
-      img.src = getDriveImageUrl(photo.id, 1600);
-      img.alt = photo.name;
-    }
-
     if (caption && photo) {
       caption.textContent = photo.name.replace(/^\d+\.\s*/, "").split(".")[0];
     }
+
+    lightboxActiveIndex = idx;
+
+    if (direction === "next") {
+      const prevSlide = wrapper.querySelector(".prev-slide");
+      const activeSlide = wrapper.querySelector(".active-slide");
+      const nextSlide = wrapper.querySelector(".next-slide");
+
+      // Shift existing classes leftward
+      if (prevSlide) prevSlide.className = "lightbox-slide offscreen-left";
+      if (activeSlide) activeSlide.className = "lightbox-slide prev-slide";
+      if (nextSlide) nextSlide.className = "lightbox-slide active-slide";
+
+      // Append new standby next slide from far right
+      const farNextIdx = (idx + 1) % len;
+      const farNextPhoto = filteredPhotos[farNextIdx];
+      
+      const newNextSlide = document.createElement("div");
+      newNextSlide.className = "lightbox-slide offscreen-right";
+      newNextSlide.dataset.index = farNextIdx;
+      newNextSlide.innerHTML = `<img src="${getDriveImageUrl(farNextPhoto.id, 1600)}" alt="${farNextPhoto.name}" class="lightbox-img">`;
+      
+      newNextSlide.addEventListener("click", () => {
+        transitionTo(farNextIdx, "next");
+      });
+
+      wrapper.appendChild(newNextSlide);
+      newNextSlide.offsetHeight; // force reflow
+      
+      newNextSlide.className = "lightbox-slide next-slide";
+
+    } else {
+      const prevSlide = wrapper.querySelector(".prev-slide");
+      const activeSlide = wrapper.querySelector(".active-slide");
+      const nextSlide = wrapper.querySelector(".next-slide");
+
+      // Shift existing classes rightward
+      if (nextSlide) nextSlide.className = "lightbox-slide offscreen-right";
+      if (activeSlide) activeSlide.className = "lightbox-slide next-slide";
+      if (prevSlide) prevSlide.className = "lightbox-slide active-slide";
+
+      // Insert new standby prev slide from far left
+      const farPrevIdx = (idx - 1 + len) % len;
+      const farPrevPhoto = filteredPhotos[farPrevIdx];
+      
+      const newPrevSlide = document.createElement("div");
+      newPrevSlide.className = "lightbox-slide offscreen-left";
+      newPrevSlide.dataset.index = farPrevIdx;
+      newPrevSlide.innerHTML = `<img src="${getDriveImageUrl(farPrevPhoto.id, 1600)}" alt="${farPrevPhoto.name}" class="lightbox-img">`;
+      
+      newPrevSlide.addEventListener("click", () => {
+        transitionTo(farPrevIdx, "prev");
+      });
+
+      wrapper.insertBefore(newPrevSlide, wrapper.firstChild);
+      newPrevSlide.offsetHeight; // force reflow
+      
+      newPrevSlide.className = "lightbox-slide prev-slide";
+    }
+
+    // Clean up offscreen slides and stabilize state after 800ms transition completes
+    setTimeout(() => {
+      const offscreen = wrapper.querySelectorAll(".offscreen-left, .offscreen-right");
+      offscreen.forEach(el => {
+        if (el.parentNode === wrapper) {
+          wrapper.removeChild(el);
+        }
+      });
+      
+      // Synchronize DOM elements to match the new active index
+      renderLightboxSlides(lightboxActiveIndex);
+      lightboxTransitioning = false;
+    }, 800);
   }
 
   init();

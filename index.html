@@ -121,10 +121,15 @@
           </h2>
           <!-- Filter Tags -->
           <div class="tag-filters" id="tag-filters">
-            <button class="tag-btn active" data-filter="all" id="btn-filter-all">Semua Foto</button>
-            <button class="tag-btn" data-filter="exterior" id="btn-filter-ext">Eksterior</button>
-            <button class="tag-btn" data-filter="interior" id="btn-filter-int">Interior</button>
-            <button class="tag-btn" data-filter="garden" id="btn-filter-garden">Taman & Kolam</button>
+            <button class="tag-btn active" data-filter="all">Semua Foto</button>
+            <button class="tag-btn" data-filter="halaman-depan">Halaman Depan</button>
+            <button class="tag-btn" data-filter="garasi-mobil">Garasi Mobil</button>
+            <button class="tag-btn" data-filter="garasi-warung">Garasi Warung</button>
+            <button class="tag-btn" data-filter="ruang-tamu">Ruang Tamu</button>
+            <button class="tag-btn" data-filter="dapur-taman-kolam">Ruang Dapur, Taman Kecil & Kolam</button>
+            <button class="tag-btn" data-filter="ruang-mushollah">Ruang Mushollah</button>
+            <button class="tag-btn" data-filter="kamar-1-mandi">Kamar 1 & Kamar Mandi</button>
+            <button class="tag-btn" data-filter="kamar-2">Kamar 2</button>
           </div>
         </div>
 
@@ -310,7 +315,9 @@
     </button>
     
     <div class="lightbox-content">
-      <img src="" alt="Lightbox Zoom" class="lightbox-img" id="lightbox-img">
+      <div class="lightbox-slides-wrapper" id="lightbox-slides-wrapper">
+        <!-- Dynamic slides go here -->
+      </div>
       <div class="lightbox-caption" id="lightbox-caption">Judul Foto</div>
     </div>
     
