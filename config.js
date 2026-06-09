@@ -68,7 +68,7 @@ const CONFIG = {
   owner: {
     name: "Febri Nahdatun",
     photoUrl: "https://drive.google.com/thumbnail?id=1SWtNTC7S035nmC2l7R39w-vGOfdhgtaC&sz=w200",
-    whatsapp: "https://api.whatsapp.com/send/?phone=6287888893111&text=Halo%20Pak%20Febri%2C%20saya%20tertarik%20dengan%20kontrakan%20rumah%20di%20Grand%20Residence%20Indah.%20Apakah%20masih%20tersedia%3F&type=phone_number&app_absent=0",
+    whatsapp: "https://api.whatsapp.com/send/?phone=6287888893111&text=Halo%20Pak%20Febri%2C%20saya%20tertarik%20untuk%20masuk%20daftar%20antrean%20(waiting%20list)%20sewa%20kontrakan%20Grand%20Residence%20Indah%20jika%20tersedia%20kembali.&type=phone_number&app_absent=0",
     telegram: "https://t.me/fbrnhdtn"
   },
 

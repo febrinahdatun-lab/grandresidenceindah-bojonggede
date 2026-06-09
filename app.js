@@ -604,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function syncWhatsAppLink(schemeText) {
       const waButtons = document.querySelectorAll(".wa-contact-btn");
-      const baseMsg = `Halo Pak Febri, saya tertarik sewa kontrakan di Grand Residence Indah dengan skema pembayaran [${schemeText}]. Berapa harga sewa dan apakah bisa survei lokasi?`;
+      const baseMsg = `Halo Pak Febri, saya tertarik untuk masuk daftar antrean (waiting list) sewa kontrakan Grand Residence Indah dengan skema pembayaran [${schemeText}] jika unit tersedia kembali.`;
       const encodedMsg = encodeURIComponent(baseMsg);
       const customWaUrl = `https://api.whatsapp.com/send/?phone=6287888893111&text=${encodedMsg}&type=phone_number&app_absent=0`;
       

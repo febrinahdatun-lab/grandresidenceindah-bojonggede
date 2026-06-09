@@ -1783,3 +1783,84 @@ body {
 .lightbox-slide.active-slide img:hover {
   transform: scale(1.015);
 }
+
+/* ==========================================================================
+   STATUS: TERSEWA / BOOKED OVERLAYS & BADGES
+   ========================================================================== */
+
+/* Premium Diagonal Center Stamp Watermark (High z-index, Glassmorphic overlay) */
+.booked-watermark-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-family: var(--font-title);
+  font-size: clamp(1.3rem, 3.2vw, 2.3rem);
+  font-weight: 850;
+  color: #FCA5A5; /* Vibrant light red text */
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  white-space: nowrap;
+  pointer-events: none; /* Click-through so it never blocks scrolls/clicks */
+  z-index: 9999; /* Display on top of all page layers */
+  user-select: none;
+  -webkit-user-select: none;
+  
+  /* Premium diagonal glassmorphic stamp layout */
+  background: rgba(15, 23, 42, 0.85); /* Dark solid slate backing to pop on any content */
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  border: 2px solid rgba(239, 68, 68, 0.7); /* Prominent solid red border */
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 15px 35px rgba(239, 68, 68, 0.35), inset 0 0 15px rgba(239, 68, 68, 0.15);
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+  
+  /* Infinite micro-pulse animation to feel alive */
+  animation: watermark-pulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes watermark-pulse {
+  0% {
+    transform: translate(-50%, -50%) rotate(-30deg) scale(0.97);
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.25);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-30deg) scale(1.03);
+    box-shadow: 0 15px 45px rgba(239, 68, 68, 0.45);
+  }
+}
+
+/* Splash badge row flex spacing */
+.splash-badges-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+/* Override margin-bottom of badge when inside row */
+.splash-badges-row .splash-badge {
+  margin-bottom: 0;
+}
+
+/* Red glassmorphic Booked badge */
+.booked-badge {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1.5px solid rgba(239, 68, 68, 0.4);
+  color: #FCA5A5;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+}
+
+.booked-badge svg {
+  fill: #FCA5A5 !important;
+}
+
+/* Info badge at the bottom unified card */
+.booked-info-badge {
+  color: #FCA5A5;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.05);
+}
